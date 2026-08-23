@@ -1,0 +1,169 @@
+{
+  "$comment": "The register from docs/clinical-scope-boundary.md §3, as data. The model and the deterministic detector read THIS FILE so they cannot drift apart. Amending this file is a clinical act: it requires the sign-off named in clinician_of_record. Not yet signed off — see docs/clinical-scope-boundary.md §8.",
+  "version": "0.1.0-draft",
+  "grounded": "2026-08-23",
+  "clinician_of_record": null,
+  "signed_off": false,
+  "tier_definitions": {
+    "A": {
+      "action": "stop_intake",
+      "route": "911 or emergency department now",
+      "basis": "MedlinePlus/NIH: call 911 even if unsure [7][8]"
+    },
+    "B": {
+      "action": "stop_intake",
+      "route": "contact clinic today; urgent care or ED if unreachable",
+      "basis": "IFOMPT emergency referral: 'as a guide, on the same day' [6]"
+    },
+    "C": {
+      "action": "complete_intake_and_flag_at_top",
+      "route": "DPT review within 5 days",
+      "basis": "IFOMPT urgent referral: 'as a guide, within 5 days' [6]",
+      "open_question": "Should this tier stop the intake instead? See §8.1."
+    },
+    "D": {
+      "action": "stop_intake",
+      "route": "988 Suicide & Crisis Lifeline",
+      "basis": "SAMHSA [11]"
+    }
+  },
+  "rules": {
+    "combine_flags": false,
+    "score_or_rank": false,
+    "single_item_fires": true,
+    "escalation_text_is_constant": true,
+    "notify_clinic_on": ["A", "B", "D"],
+    "record_patient_words_not_label": true,
+    "flag_is_retractable": false,
+    "detector_disagreement_resolves_to": "escalate"
+  },
+  "flags": [
+    {
+      "id": "cardiac_pattern",
+      "tier": "A",
+      "reported": "Chest discomfort lasting more than a few minutes or coming and going; discomfort in one or both arms, back, shoulders, neck, jaw or upper stomach; shortness of breath; cold sweat, nausea, lightheadedness",
+      "source": "MedlinePlus/NIH heart attack [7]"
+    },
+    {
+      "id": "stroke_pattern",
+      "tier": "A",
+      "reported": "Sudden numbness or weakness of face, arm or leg especially one side; sudden confusion or trouble speaking; sudden trouble seeing; sudden difficulty walking, dizziness or loss of balance; sudden severe headache with no known cause",
+      "source": "MedlinePlus/NIH stroke [8]"
+    },
+    {
+      "id": "cervical_vascular",
+      "tier": "A",
+      "reported": "Neck or head pain WITH any of: unsteadiness or ataxia, slurred or disturbed speech, difficulty swallowing, facial droop, drooping eyelid, double vision or visual disturbance, facial numbness, nausea and vomiting, loss of consciousness",
+      "source": "IFOMPT Cervical Framework 2020 [9]",
+      "note": "Framework percentages inform WHICH items are listed, never a weighting — the framework states they are 'not intended to inform any judgement on relative risk'."
+    },
+    {
+      "id": "pulmonary_embolism",
+      "tier": "A",
+      "reported": "Sudden shortness of breath or chest pain together with calf pain or swelling",
+      "source": "APTA VTE CPG 2022 [10]"
+    },
+    {
+      "id": "ces_saddle_sensory",
+      "tier": "B",
+      "reported": "New numbness in the buttocks, inner thighs or genitals, including loss of normal sensation when wiping after toileting",
+      "source": "IFOMPT spinal framework, CES cue card [6]"
+    },
+    {
+      "id": "ces_bladder",
+      "tier": "B",
+      "reported": "New difficulty passing urine, incomplete emptying, hesitancy, not feeling the bladder fill, or incontinence",
+      "source": "IFOMPT spinal framework, CES cue card [6]"
+    },
+    {
+      "id": "ces_bowel",
+      "tier": "B",
+      "reported": "New bowel incontinence or inability to control the bowels",
+      "source": "IFOMPT spinal framework, CES cue card [6]"
+    },
+    {
+      "id": "ces_sexual",
+      "tier": "B",
+      "reported": "New sexual dysfunction alongside back or leg symptoms",
+      "source": "IFOMPT spinal framework, CES cue card [6]"
+    },
+    {
+      "id": "ces_bilateral_progression",
+      "tier": "B",
+      "reported": "Leg pain that began on one side and is now both sides, or alternates sides, with new weakness",
+      "source": "IFOMPT: presentations increasing probability of acute threatened CES [6]"
+    },
+    {
+      "id": "progressive_neuro_deficit",
+      "tier": "B",
+      "reported": "Leg weakness that is getting worse, or new trouble walking",
+      "source": "IFOMPT: abnormal and progressing neurological deficit [6]"
+    },
+    {
+      "id": "lower_extremity_dvt",
+      "tier": "B",
+      "reported": "Calf or leg pain with swelling, warmth, redness or discoloration",
+      "source": "APTA VTE CPG 2022 key action statement [10]",
+      "note": "The agent does NOT apply Wells criteria. The guideline assigns that to the therapist."
+    },
+    {
+      "id": "cancer_history_spinal_pain",
+      "tier": "C",
+      "reported": "History of cancer with new spinal pain, particularly thoracic",
+      "source": "IFOMPT malignancy tables [6]"
+    },
+    {
+      "id": "night_pain_unrelieved",
+      "tier": "C",
+      "reported": "Night pain where they cannot get back to sleep — walking the floors, sitting in a chair, lying on the floor with minimal relief",
+      "source": "IFOMPT malignancy symptoms [6]"
+    },
+    {
+      "id": "systemically_unwell",
+      "tier": "C",
+      "reported": "Unexplained weight loss, or feeling systemically unwell — fatigue, nausea, loss of appetite",
+      "source": "IFOMPT malignancy symptoms [6]"
+    },
+    {
+      "id": "band_like_pain",
+      "tier": "C",
+      "reported": "Band-like pain around the trunk",
+      "source": "IFOMPT: may indicate metastatic spinal cord compression [6]"
+    },
+    {
+      "id": "fever_with_spinal_pain",
+      "tier": "C",
+      "reported": "Fever or chills with spinal pain",
+      "source": "IFOMPT infection: classic triad is back pain, fever, neurological dysfunction; absence of fever cannot rule out [6]"
+    },
+    {
+      "id": "infection_risk_context",
+      "tier": "C",
+      "reported": "Immunosuppression (diabetes, HIV, rheumatoid arthritis, long-term steroids, heavy alcohol use), recent infection, recent spinal or abdominal surgery, or intravenous drug use, with new spinal pain",
+      "source": "IFOMPT infection risk factors [6]"
+    },
+    {
+      "id": "fracture_risk_context",
+      "tier": "C",
+      "reported": "Known osteoporosis, previous fragility fracture, or steroid tablets/inhalers over months, with new spinal pain",
+      "source": "IFOMPT fracture risk factors [6]"
+    },
+    {
+      "id": "unfamiliar_pain_after_trauma",
+      "tier": "C",
+      "reported": "Recent fall, trauma or lifting event followed by pain unlike their usual pain",
+      "source": "IFOMPT fracture symptoms [6]"
+    },
+    {
+      "id": "self_harm",
+      "tier": "D",
+      "reported": "Anything indicating thoughts of suicide or self-harm",
+      "source": "SAMHSA 988 [11]",
+      "note": "No risk assessment. No follow-up questions. The number, and stop."
+    }
+  ],
+  "excluded_by_design": {
+    "reason": "Requires examination by a suitably trained clinician (IFOMPT sign tables [6]). If a trigger cannot be phrased as a sentence a patient would say about themselves, it does not belong in this system.",
+    "items": ["reflex testing", "myotome/dermatome mapping", "anal tone", "gait observation", "blood pressure", "pulses", "thermometer readings"]
+  }
+}
