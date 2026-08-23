@@ -1,0 +1,2 @@
+{ "tier_definitions": { "A": { "action": "stop_intake" } },
+  "flags": [ { "id": "x", "tier": "A", "reported": "something" } ] }
