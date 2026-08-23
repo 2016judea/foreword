@@ -32,3 +32,14 @@ test('rejects an unknown tier', () => {
     /invalid tier/,
   );
 });
+
+test('every flag carries at least one detection pattern', () => {
+  const reg = loadRegister();
+  for (const flag of reg.flags) {
+    assert.ok(Array.isArray(flag.patterns) && flag.patterns.length > 0, `${flag.id} has no patterns`);
+    for (const p of flag.patterns) {
+      assert.ok(Array.isArray(p.all) && p.all.length > 0, `${flag.id} has an empty pattern`);
+      for (const term of p.all) new RegExp(term, 'i'); // throws on a bad regex
+    }
+  }
+});
