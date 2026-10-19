@@ -21,6 +21,24 @@ export function loadRegister(path = DEFAULT_PATH) {
     }
     // Every clinical claim carries a citation — boundary doc, Rules.
     if (!flag.source) throw new Error(`register: ${flag.id} has no source`);
+    // The deterministic detector reads `patterns`. A flag with none is a flag
+    // that can only ever fire via the model path, which is one detector, not two
+    // (boundary doc §4). Refuse the register rather than ship a silent gap.
+    if (!Array.isArray(flag.patterns) || flag.patterns.length === 0) {
+      throw new Error(`register: ${flag.id} has no patterns`);
+    }
+    for (const pattern of flag.patterns) {
+      if (!Array.isArray(pattern.all) || pattern.all.length === 0) {
+        throw new Error(`register: ${flag.id} has an empty pattern`);
+      }
+      for (const term of pattern.all) {
+        try {
+          new RegExp(term, 'i');
+        } catch (err) {
+          throw new Error(`register: ${flag.id} has a bad regex ${JSON.stringify(term)}: ${err.message}`);
+        }
+      }
+    }
   }
   return reg;
 }

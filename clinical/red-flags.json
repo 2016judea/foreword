@@ -32,138 +32,382 @@
     "score_or_rank": false,
     "single_item_fires": true,
     "escalation_text_is_constant": true,
-    "notify_clinic_on": ["A", "B", "D"],
+    "notify_clinic_on": [
+      "A",
+      "B",
+      "D"
+    ],
     "record_patient_words_not_label": true,
     "flag_is_retractable": false,
-    "detector_disagreement_resolves_to": "escalate"
+    "detector_disagreement_resolves_to": "escalate",
+    "pattern_semantics": "A pattern fires when EVERY term in its `all` array matches the turn (case-insensitive, curly apostrophes normalised to straight). A flag fires when ANY of its patterns fires. Conjunctive by design: a bare 'numb' or 'chest' fires on half of all intakes."
   },
   "flags": [
     {
       "id": "cardiac_pattern",
       "tier": "A",
       "reported": "Chest discomfort lasting more than a few minutes or coming and going; discomfort in one or both arms, back, shoulders, neck, jaw or upper stomach; shortness of breath; cold sweat, nausea, lightheadedness",
-      "source": "MedlinePlus/NIH heart attack [7]"
+      "source": "MedlinePlus/NIH heart attack [7]",
+      "patterns": [
+        {
+          "all": [
+            "chest",
+            "(pain|discomfort|pressure|tight|squeez|heav)"
+          ]
+        },
+        {
+          "all": [
+            "(jaw|left arm|both arms|shoulder blade)",
+            "(pain|ache|discomfort|numb)",
+            "(sweat|nausea|sick|breath|dizz)"
+          ]
+        }
+      ]
     },
     {
       "id": "stroke_pattern",
       "tier": "A",
       "reported": "Sudden numbness or weakness of face, arm or leg especially one side; sudden confusion or trouble speaking; sudden trouble seeing; sudden difficulty walking, dizziness or loss of balance; sudden severe headache with no known cause",
-      "source": "MedlinePlus/NIH stroke [8]"
+      "source": "MedlinePlus/NIH stroke [8]",
+      "patterns": [
+        {
+          "all": [
+            "sudden",
+            "(numb|weak|slur|speech|vision|balance|confus)"
+          ]
+        },
+        {
+          "all": [
+            "face",
+            "(droop|drooping|fell|numb)"
+          ]
+        },
+        {
+          "all": [
+            "worst.{0,15}headache"
+          ]
+        }
+      ]
     },
     {
       "id": "cervical_vascular",
       "tier": "A",
       "reported": "Neck or head pain WITH any of: unsteadiness or ataxia, slurred or disturbed speech, difficulty swallowing, facial droop, drooping eyelid, double vision or visual disturbance, facial numbness, nausea and vomiting, loss of consciousness",
       "source": "IFOMPT Cervical Framework 2020 [9]",
-      "note": "Framework percentages inform WHICH items are listed, never a weighting — the framework states they are 'not intended to inform any judgement on relative risk'."
+      "note": "Framework percentages inform WHICH items are listed, never a weighting — the framework states they are 'not intended to inform any judgement on relative risk'.",
+      "patterns": [
+        {
+          "all": [
+            "(neck|head)",
+            "(pain|ache|hurt)",
+            "(slur|swallow|droop|double vision|ataxi|unsteady|ptosis|passed out|fainted|vomit)"
+          ]
+        }
+      ]
     },
     {
       "id": "pulmonary_embolism",
       "tier": "A",
       "reported": "Sudden shortness of breath or chest pain together with calf pain or swelling",
-      "source": "APTA VTE CPG 2022 [10]"
+      "source": "APTA VTE CPG 2022 [10]",
+      "patterns": [
+        {
+          "all": [
+            "(short of breath|breathless|can'?t breathe|chest)",
+            "(calf|leg)",
+            "(swell|swollen|pain)"
+          ]
+        }
+      ]
     },
     {
       "id": "ces_saddle_sensory",
       "tier": "B",
       "reported": "New numbness in the buttocks, inner thighs or genitals, including loss of normal sensation when wiping after toileting",
-      "source": "IFOMPT spinal framework, CES cue card [6]"
+      "source": "IFOMPT spinal framework, CES cue card [6]",
+      "patterns": [
+        {
+          "all": [
+            "(numb|no feeling|can'?t feel|cannot feel|tingl|pins and needles)",
+            "(saddle|groin|genital|inner thigh|buttock|bottom|perine|wipe|wiping|toilet)"
+          ]
+        }
+      ]
     },
     {
       "id": "ces_bladder",
       "tier": "B",
       "reported": "New difficulty passing urine, incomplete emptying, hesitancy, not feeling the bladder fill, or incontinence",
-      "source": "IFOMPT spinal framework, CES cue card [6]"
+      "source": "IFOMPT spinal framework, CES cue card [6]",
+      "patterns": [
+        {
+          "all": [
+            "(can'?t|cannot|trouble|difficulty|unable|hard to|struggl)",
+            "(\\bpee|\\burin|\\bwee\\b|pass water|empty my bladder|bladder)"
+          ]
+        },
+        {
+          "all": [
+            "(wet myself|wetting myself|incontinen|leaking|had an accident)",
+            "(\\burin|\\bpee|bladder|\\bwee\\b)"
+          ]
+        },
+        {
+          "all": [
+            "(don'?t|can'?t|cannot)",
+            "feel",
+            "(bladder|need to (pee|go))"
+          ]
+        }
+      ]
     },
     {
       "id": "ces_bowel",
       "tier": "B",
       "reported": "New bowel incontinence or inability to control the bowels",
-      "source": "IFOMPT spinal framework, CES cue card [6]"
+      "source": "IFOMPT spinal framework, CES cue card [6]",
+      "patterns": [
+        {
+          "all": [
+            "(bowel|\\bpoo\\b|stool|faec|fecal|number two)",
+            "(incontinen|accident|can'?t control|cannot control|leak|soil)"
+          ]
+        }
+      ]
     },
     {
       "id": "ces_sexual",
       "tier": "B",
       "reported": "New sexual dysfunction alongside back or leg symptoms",
-      "source": "IFOMPT spinal framework, CES cue card [6]"
+      "source": "IFOMPT spinal framework, CES cue card [6]",
+      "patterns": [
+        {
+          "all": [
+            "(erection|ejaculat|orgasm|sex)",
+            "(can'?t|cannot|trouble|different|numb|change)"
+          ]
+        }
+      ]
     },
     {
       "id": "ces_bilateral_progression",
       "tier": "B",
       "reported": "Leg pain that began on one side and is now both sides, or alternates sides, with new weakness",
-      "source": "IFOMPT: presentations increasing probability of acute threatened CES [6]"
+      "source": "IFOMPT: presentations increasing probability of acute threatened CES [6]",
+      "patterns": [
+        {
+          "all": [
+            "(both legs|other leg|other side|switched|alternat)",
+            "(pain|weak|numb)"
+          ]
+        }
+      ]
     },
     {
       "id": "progressive_neuro_deficit",
       "tier": "B",
       "reported": "Leg weakness that is getting worse, or new trouble walking",
-      "source": "IFOMPT: abnormal and progressing neurological deficit [6]"
+      "source": "IFOMPT: abnormal and progressing neurological deficit [6]",
+      "patterns": [
+        {
+          "all": [
+            "(weak|weakness|giving way|buckl|drag|foot drop)",
+            "(worse|worsening|getting|more)"
+          ]
+        },
+        {
+          "all": [
+            "(trouble|difficulty|can'?t|cannot|struggl)",
+            "walk"
+          ]
+        }
+      ]
     },
     {
       "id": "lower_extremity_dvt",
       "tier": "B",
       "reported": "Calf or leg pain with swelling, warmth, redness or discoloration",
       "source": "APTA VTE CPG 2022 key action statement [10]",
-      "note": "The agent does NOT apply Wells criteria. The guideline assigns that to the therapist."
+      "note": "The agent does NOT apply Wells criteria. The guideline assigns that to the therapist.",
+      "patterns": [
+        {
+          "all": [
+            "(calf|lower leg|behind my knee|thigh)",
+            "(swell|swollen|puff)"
+          ]
+        },
+        {
+          "all": [
+            "(calf|leg)",
+            "(warm|\\bhot\\b|\\bred\\b|purple|discolo)",
+            "(pain|tender|sore|swell)"
+          ]
+        }
+      ]
     },
     {
       "id": "cancer_history_spinal_pain",
       "tier": "C",
       "reported": "History of cancer with new spinal pain, particularly thoracic",
-      "source": "IFOMPT malignancy tables [6]"
+      "source": "IFOMPT malignancy tables [6]",
+      "patterns": [
+        {
+          "all": [
+            "(cancer|tumour|tumor|chemo|radiotherapy|mastectomy|melanoma|lymphoma)"
+          ]
+        }
+      ]
     },
     {
       "id": "night_pain_unrelieved",
       "tier": "C",
       "reported": "Night pain where they cannot get back to sleep — walking the floors, sitting in a chair, lying on the floor with minimal relief",
-      "source": "IFOMPT malignancy symptoms [6]"
+      "source": "IFOMPT malignancy symptoms [6]",
+      "patterns": [
+        {
+          "all": [
+            "night",
+            "(can'?t|cannot|unable)",
+            "(sleep|settle|get back|lie)"
+          ]
+        },
+        {
+          "all": [
+            "(walk the floor|pace|sit in a chair|sleep in a chair|floor)",
+            "night"
+          ]
+        }
+      ]
     },
     {
       "id": "systemically_unwell",
       "tier": "C",
       "reported": "Unexplained weight loss, or feeling systemically unwell — fatigue, nausea, loss of appetite",
-      "source": "IFOMPT malignancy symptoms [6]"
+      "source": "IFOMPT malignancy symptoms [6]",
+      "patterns": [
+        {
+          "all": [
+            "(lost|losing|dropped)",
+            "(weight|pounds|lbs|stone)"
+          ]
+        },
+        {
+          "all": [
+            "(no appetite|off my food|exhausted|wiped out|unwell|feel awful)"
+          ]
+        }
+      ]
     },
     {
       "id": "band_like_pain",
       "tier": "C",
       "reported": "Band-like pain around the trunk",
-      "source": "IFOMPT: may indicate metastatic spinal cord compression [6]"
+      "source": "IFOMPT: may indicate metastatic spinal cord compression [6]",
+      "patterns": [
+        {
+          "all": [
+            "(\\bband\\b|belt|corset|wrapped|around my)",
+            "(chest|ribs|middle|trunk|waist)"
+          ]
+        }
+      ]
     },
     {
       "id": "fever_with_spinal_pain",
       "tier": "C",
       "reported": "Fever or chills with spinal pain",
-      "source": "IFOMPT infection: classic triad is back pain, fever, neurological dysfunction; absence of fever cannot rule out [6]"
+      "source": "IFOMPT infection: classic triad is back pain, fever, neurological dysfunction; absence of fever cannot rule out [6]",
+      "patterns": [
+        {
+          "all": [
+            "(fever|temperature|chills|shivers|sweats|night sweats)"
+          ]
+        }
+      ]
     },
     {
       "id": "infection_risk_context",
       "tier": "C",
       "reported": "Immunosuppression (diabetes, HIV, rheumatoid arthritis, long-term steroids, heavy alcohol use), recent infection, recent spinal or abdominal surgery, or intravenous drug use, with new spinal pain",
-      "source": "IFOMPT infection risk factors [6]"
+      "source": "IFOMPT infection risk factors [6]",
+      "patterns": [
+        {
+          "all": [
+            "(immunosuppress|\\bhiv\\b|rheumatoid|steroid|prednis|chemo|dialysis|iv drug|intravenous|inject(ing|ed)? (drugs|heroin)|heroin)"
+          ]
+        },
+        {
+          "all": [
+            "(recent|just had|last month)",
+            "(surgery|operation|infection|abscess)"
+          ]
+        }
+      ]
     },
     {
       "id": "fracture_risk_context",
       "tier": "C",
       "reported": "Known osteoporosis, previous fragility fracture, or steroid tablets/inhalers over months, with new spinal pain",
-      "source": "IFOMPT fracture risk factors [6]"
+      "source": "IFOMPT fracture risk factors [6]",
+      "patterns": [
+        {
+          "all": [
+            "(osteoporo|osteopeni|brittle bones|fragility fracture|dexa)"
+          ]
+        },
+        {
+          "all": [
+            "(steroid|prednis|inhaler)",
+            "(month|year|long term|years)"
+          ]
+        }
+      ]
     },
     {
       "id": "unfamiliar_pain_after_trauma",
       "tier": "C",
       "reported": "Recent fall, trauma or lifting event followed by pain unlike their usual pain",
-      "source": "IFOMPT fracture symptoms [6]"
+      "source": "IFOMPT fracture symptoms [6]",
+      "patterns": [
+        {
+          "all": [
+            "(fell|fall|slipped|tripped|crash|collision|landed)",
+            "(pain|hurt|since)"
+          ]
+        },
+        {
+          "all": [
+            "(never|not) (felt|had)",
+            "(like this|pain like)"
+          ]
+        }
+      ]
     },
     {
       "id": "self_harm",
       "tier": "D",
       "reported": "Anything indicating thoughts of suicide or self-harm",
       "source": "SAMHSA 988 [11]",
-      "note": "No risk assessment. No follow-up questions. The number, and stop."
+      "note": "No risk assessment. No follow-up questions. The number, and stop.",
+      "patterns": [
+        {
+          "all": [
+            "(kill myself|end my life|suicid|not want to be here|don'?t want to be here|hurt myself|self.?harm|no point going on)"
+          ]
+        }
+      ]
     }
   ],
   "excluded_by_design": {
     "reason": "Requires examination by a suitably trained clinician (IFOMPT sign tables [6]). If a trigger cannot be phrased as a sentence a patient would say about themselves, it does not belong in this system.",
-    "items": ["reflex testing", "myotome/dermatome mapping", "anal tone", "gait observation", "blood pressure", "pulses", "thermometer readings"]
+    "items": [
+      "reflex testing",
+      "myotome/dermatome mapping",
+      "anal tone",
+      "gait observation",
+      "blood pressure",
+      "pulses",
+      "thermometer readings"
+    ]
   }
 }

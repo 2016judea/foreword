@@ -43,3 +43,17 @@ test('every flag carries at least one detection pattern', () => {
     }
   }
 });
+
+test('rejects a flag with no detection patterns', () => {
+  assert.throws(
+    () => loadRegister(new URL('./fixtures/no-patterns.json', import.meta.url)),
+    /no patterns/,
+  );
+});
+
+test('rejects a pattern that is not a valid regex', () => {
+  assert.throws(
+    () => loadRegister(new URL('./fixtures/bad-regex.json', import.meta.url)),
+    /bad regex/,
+  );
+});
